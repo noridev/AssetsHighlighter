@@ -1,0 +1,16 @@
+{
+  "name": "moe.noridev.assets-highlighter",
+  "version": "1.0.0",
+  "displayName": "NoriDev - AssetsHighlighter",
+  "description": "Assets are highlighted when they are imported or changed.",
+  "author": {
+    "name": "NoriDev",
+    "url": "https://github.com/noridev"
+  },
+  "unity": "2019.4",
+  "license": "MIT",
+  "url" : "",
+  "documentationUrl": "",
+  "repo" : "https://vpm.noridev.moe/index.json",
+  "changelogUrl": "https://github.com/noridev/AssetsHighlighter/blob/develop/CHANGELOG.md"
+}
