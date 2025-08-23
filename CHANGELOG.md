@@ -26,6 +26,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -->
 
+## [1.x.x] - 2025-x-x
+
+### Fixed 
+- 그리드 뷰에서 강조 표시가 잘못 표시될 수 있음
+
+---
+
 ## [1.0.0] - 2025-08-22
 
 - 최초 릴리즈

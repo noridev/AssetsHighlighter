@@ -6,7 +6,8 @@ using UnityEngine;
 [InitializeOnLoad]
 public class AssetHighlighter : AssetPostprocessor
 {
-    private static readonly HashSet<string> s_highlightedAssetGuids = new HashSet<string>();
+    private static HashSet<string> s_importedAssets = new HashSet<string>();
+    private static float s_lastImportTime = 0f;
 
     static AssetHighlighter()
     {
@@ -20,8 +21,16 @@ public class AssetHighlighter : AssetPostprocessor
             return;
         }
 
-        ProcessAssets(importedAssets);
-        ProcessAssets(movedAssets);
+        if (s_lastImportTime == Time.time && s_importedAssets != null)
+        {
+            ProcessAssets(importedAssets);
+        }
+        else
+        {
+            s_importedAssets = new HashSet<string>();
+            ProcessAssets(importedAssets);
+        }
+        s_lastImportTime = Time.time;
 
         EditorApplication.RepaintProjectWindow();
     }
@@ -30,20 +39,15 @@ public class AssetHighlighter : AssetPostprocessor
     {
         foreach (string path in assetPaths)
         {
-            string guid = AssetDatabase.AssetPathToGUID(path);
-            if (!string.IsNullOrEmpty(guid))
+            if (!string.IsNullOrEmpty(path))
             {
-                s_highlightedAssetGuids.Add(guid);
+                s_importedAssets.Add(path);
             }
 
             string parentPath = Path.GetDirectoryName(path);
             while (!string.IsNullOrEmpty(parentPath) && parentPath != "Assets")
             {
-                string parentGuid = AssetDatabase.AssetPathToGUID(parentPath);
-                if (!string.IsNullOrEmpty(parentGuid))
-                {
-                    s_highlightedAssetGuids.Add(parentGuid);
-                }
+                s_importedAssets.Add(parentPath);
                 parentPath = Path.GetDirectoryName(parentPath);
             }
         }
@@ -51,25 +55,26 @@ public class AssetHighlighter : AssetPostprocessor
 
     private static void OnProjectWindowGUI(string guid, Rect selectionRect)
     {
-        if (!AssetHighlighterSettings.IsEnabled || !s_highlightedAssetGuids.Contains(guid))
+        if (!AssetHighlighterSettings.IsEnabled || s_importedAssets == null)
         {
             return;
         }
 
-        Rect highlightRect = selectionRect;
-        if (highlightRect.x > 14) 
+        var assetPath = AssetDatabase.GUIDToAssetPath(guid);
+        if (string.IsNullOrEmpty(assetPath)) return;
+
+        if (s_importedAssets.Contains(assetPath))
         {
-            highlightRect.x = 14;
-            highlightRect.width += selectionRect.x - 14;
+            var originColor = GUI.color;
+            GUI.color = AssetHighlighterSettings.HighlightColor;
+            GUI.Box(selectionRect, string.Empty);
+            GUI.color = originColor;
         }
-        
-        Color highlightColor = AssetHighlighterSettings.HighlightColor;
-        EditorGUI.DrawRect(highlightRect, highlightColor);
     }
     
     public static void ClearAllHighlights()
     {
-        s_highlightedAssetGuids.Clear();
+        s_importedAssets?.Clear();
         EditorApplication.RepaintProjectWindow();
     }
 }
@@ -108,7 +113,7 @@ public class AssetHighlighterSettings : EditorWindow
                 EditorPrefs.GetFloat(ColorPreferenceKeyR, 1.0f),
                 EditorPrefs.GetFloat(ColorPreferenceKeyG, 0.0f),
                 EditorPrefs.GetFloat(ColorPreferenceKeyB, 0.0f),
-                EditorPrefs.GetFloat(ColorPreferenceKeyA, 0.1176f)
+                EditorPrefs.GetFloat(ColorPreferenceKeyA, 1.0f)
             );
         }
         private set
