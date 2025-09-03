@@ -1,6 +1,6 @@
 {
   "name": "moe.noridev.assets-highlighter",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "displayName": "NoriDev - AssetsHighlighter",
   "description": "Assets are highlighted when they are imported or changed.",
   "author": {
