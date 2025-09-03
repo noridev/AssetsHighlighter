@@ -26,6 +26,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -->
 
+## [1.x.x] - 2025-x-x
+
+### Fixed
+- 루트 폴더부터 강조 표시가 제대로 작동하지 않을 수 있음
+
+---
+
 ## [1.0.1] - 2025-08-24
 
 ### Fixed 

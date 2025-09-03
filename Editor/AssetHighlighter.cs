@@ -45,7 +45,7 @@ public class AssetHighlighter : AssetPostprocessor
             }
 
             string parentPath = Path.GetDirectoryName(path);
-            while (!string.IsNullOrEmpty(parentPath) && parentPath != "Assets")
+            while (!string.IsNullOrEmpty(parentPath))
             {
                 s_importedAssets.Add(parentPath);
                 parentPath = Path.GetDirectoryName(parentPath);
